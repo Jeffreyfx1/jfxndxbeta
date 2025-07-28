@@ -91,8 +91,8 @@ Start by forking this repository to your own GitHub account. Click the button be
 - Creator and Owner of JFX-MD-X  
 
 > JFX-MD-X Helpers  
-- [ROMEKTRICKS](https://github.com/ROMEKTRICKS)  
-- For helping in bot plugin files.
+- [CASEYRHODES](https://github.com/caseyweb)  
+- For helping in bot files.
 
 ---
 
