@@ -64,24 +64,27 @@ const {
   // Clear the temp directory every 5 minutes
   setInterval(clearTempDir, 5 * 60 * 1000);
   
-  //===================SESSION-AUTH============================
+//===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
-if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
-const sessdata = config.SESSION_ID.replace("JFX MD-X~", '');
-const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
-filer.download((err, data) => {
-if(err) throw err
-fs.writeFile(__dirname + '/sessions/creds.json', data, () => {
-console.log("Session downloaded ✅")
-})})}
+    if (!config.SESSION_ID) {
+        return console.log('❌ Please add your session to SESSION_ID env !!');
+    }
 
-const express = require("express");
-const app = express();
-const port = process.env.PORT || 9090;
-  
-  //=============================================
-  
-  async function connectToWA() {
+    // Replace "Caseyrhodes~" with your friend's bot name prefix
+    const sessdata = config.SESSION_ID.replace("Caseyrhodes~", '');
+    
+    try {
+        const filer = File.fromURL(`https://mega.nz/file/${sessdata}`);
+        filer.download((err, data) => {
+            if (err) throw err;
+            fs.writeFile(__dirname + '/sessions/creds.json', data, () => {
+                console.log("✅ Session downloaded from Mega");
+            });
+        });
+    } catch (e) {
+        console.error("❌ Invalid Mega session format: ", e.message);
+    }
+}  async function connectToWA() {
   console.log("Connecting to WhatsApp ⏳️...");
   const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/')
   var { version } = await fetchLatestBaileysVersion()
