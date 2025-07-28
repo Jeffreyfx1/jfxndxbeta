@@ -64,60 +64,36 @@ const {
   // Clear the temp directory every 5 minutes
   setInterval(clearTempDir, 5 * 60 * 1000);
   
-const fs = require("fs");
-const { File } = require("megajs");
-const express = require("express");
-const app = express(); // ✅ define app
-const port = process.env.PORT || 9090;
-
-//===================SESSION-AUTH============================
+  //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
-    if (!config.SESSION_ID) {
-        return console.log('❌ Please add your session to SESSION_ID env !!');
-    }
+if(!config.SESSION_ID) return console.log('Please add your session to SESSION_ID env !!')
+const sessdata = config.SESSION_ID.replace("JFX MD-X~", '');
+const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
+filer.download((err, data) => {
+if(err) throw err
+fs.writeFile(__dirname + '/sessions/creds.json', data, () => {
+console.log("Session downloaded ✅")
+})})}
 
-    // Replace "Caseyrhodes~" with your friend's bot name prefix
-    const sessdata = config.SESSION_ID.replace("Caseyrhodes~", '');
-
-    try {
-        const filer = File.fromURL(`https://mega.nz/file/${sessdata}`);
-        filer.download((err, data) => {
-            if (err) throw err;
-            fs.writeFile(__dirname + '/sessions/creds.json', data, () => {
-                console.log("✅ Session downloaded from Mega");
-            });
-        });
-    } catch (e) {
-        console.error("❌ Invalid Mega session format: ", e.message);
-    }
-}
-
-// Optional endpoint to show bot is running
-app.get("/", (req, res) => {
-    res.send("✅ JFX MD-X bot is alive");
-});
-
-app.listen(port, () => {
-    console.log(`🌐 Server is running on port ${port}`);
-});
-
-//================== WhatsApp Connect ==========================
-async function connectToWA() {
-    console.log("Connecting to WhatsApp ⏳️...");
-    const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/');
-    var { version } = await fetchLatestBaileysVersion();
-
-    const conn = makeWASocket({
-        logger: P({ level: 'silent' }),
-        printQRInTerminal: false,
-        browser: Browsers.macOS("Firefox"),
-        syncFullHistory: true,
-        auth: state,
-        version
-    });
-
-    // add more connection logic...
-}
+const express = require("express");
+const app = express();
+const port = process.env.PORT || 9090;
+  
+  //=============================================
+  
+  async function connectToWA() {
+  console.log("Connecting to WhatsApp ⏳️...");
+  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/')
+  var { version } = await fetchLatestBaileysVersion()
+  
+  const conn = makeWASocket({
+          logger: P({ level: 'silent' }),
+          printQRInTerminal: false,
+          browser: Browsers.macOS("Firefox"),
+          syncFullHistory: true,
+          auth: state,
+          version
+          })
       
   conn.ev.on('connection.update', (update) => {
   const { connection, lastDisconnect } = update
@@ -790,7 +766,7 @@ if (!isReact && config.CUSTOM_REACT === 'true') {
   }
   
   app.get("/", (req, res) => {
-  res.send("JFX MD-X STARTED ✅");
+  res.send("KHAN MD STARTED ✅");
   });
   app.listen(port, () => console.log(`Server listening on port http://localhost:${port}`));
   setTimeout(() => {
