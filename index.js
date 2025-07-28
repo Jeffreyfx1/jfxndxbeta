@@ -64,6 +64,12 @@ const {
   // Clear the temp directory every 5 minutes
   setInterval(clearTempDir, 5 * 60 * 1000);
   
+const fs = require("fs");
+const { File } = require("megajs");
+const express = require("express");
+const app = express(); // ✅ define app
+const port = process.env.PORT || 9090;
+
 //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
     if (!config.SESSION_ID) {
@@ -72,7 +78,7 @@ if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
 
     // Replace "Caseyrhodes~" with your friend's bot name prefix
     const sessdata = config.SESSION_ID.replace("Caseyrhodes~", '');
-    
+
     try {
         const filer = File.fromURL(`https://mega.nz/file/${sessdata}`);
         filer.download((err, data) => {
@@ -84,19 +90,34 @@ if (!fs.existsSync(__dirname + '/sessions/creds.json')) {
     } catch (e) {
         console.error("❌ Invalid Mega session format: ", e.message);
     }
-}  async function connectToWA() {
-  console.log("Connecting to WhatsApp ⏳️...");
-  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/')
-  var { version } = await fetchLatestBaileysVersion()
-  
-  const conn = makeWASocket({
-          logger: P({ level: 'silent' }),
-          printQRInTerminal: false,
-          browser: Browsers.macOS("Firefox"),
-          syncFullHistory: true,
-          auth: state,
-          version
-          })
+}
+
+// Optional endpoint to show bot is running
+app.get("/", (req, res) => {
+    res.send("✅ JFX MD-X bot is alive");
+});
+
+app.listen(port, () => {
+    console.log(`🌐 Server is running on port ${port}`);
+});
+
+//================== WhatsApp Connect ==========================
+async function connectToWA() {
+    console.log("Connecting to WhatsApp ⏳️...");
+    const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/');
+    var { version } = await fetchLatestBaileysVersion();
+
+    const conn = makeWASocket({
+        logger: P({ level: 'silent' }),
+        printQRInTerminal: false,
+        browser: Browsers.macOS("Firefox"),
+        syncFullHistory: true,
+        auth: state,
+        version
+    });
+
+    // add more connection logic...
+}
       
   conn.ev.on('connection.update', (update) => {
   const { connection, lastDisconnect } = update
