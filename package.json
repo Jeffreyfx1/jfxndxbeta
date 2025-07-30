@@ -4,12 +4,12 @@
   "description": "A WhatsApp Bot Created By JEPHTER TECH",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start index.js --deep-monitoring --attach --name KHAN-MD",
-    "stop": "pm2 stop KHAN-MD",
-    "restart": "pm2 restart KHAN-MD"
+    "start": "pm2 start index.js --deep-monitoring --attach --name JFX MD-X",
+    "stop": "pm2 stop JFX MD-X",
+    "restart": "pm2 restart JFX MD-X"
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "6.7.9",
+     "@whiskeysockets/baileys": "^6.7.18",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@dark-yasiya/yt-dl.js": "1.0.5",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
